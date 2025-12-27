@@ -8,6 +8,9 @@ import MyComplaints from "./pages/MyComplaints";
 import AdminDashboard from "./pages/AdminDashboard";
 import ManageComplaints from "./pages/ManageComplaints";
 import AdminAnalytics from "./pages/AdminAnalytics";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+
 
 
 function App() {
@@ -15,6 +18,8 @@ function App() {
     <Routes>
 
       <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       <Route path="/dashboard" element={<UserDashboard />} />
       <Route path="/create" element={<CreateComplaint />} />
       <Route path="/my-complaints" element={<MyComplaints />} />

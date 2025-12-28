@@ -10,6 +10,7 @@ import ManageComplaints from "./pages/ManageComplaints";
 import AdminAnalytics from "./pages/AdminAnalytics";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 
 
@@ -20,10 +21,18 @@ function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/dashboard" element={<UserDashboard />} />
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <UserDashboard />
+        </ProtectedRoute>
+      } />
       <Route path="/create" element={<CreateComplaint />} />
       <Route path="/my-complaints" element={<MyComplaints />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/dashboard" element={
+        <ProtectedRoute role="admin">
+          <AdminDashboard />
+        </ProtectedRoute>
+      } />
       <Route path="/admin/complaints" element={<ManageComplaints />} />
       <Route path="/admin/analytics" element={<AdminAnalytics />} />
 

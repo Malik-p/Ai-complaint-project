@@ -1,31 +1,26 @@
-import React from 'react'
+import { useEffect, useState } from "react";
 import AdminLayout from "../layouts/AdminLayout";
-
-const complaints = [
-  {
-    id: 1,
-    title: "Water leakage",
-    category: "Water",
-    priority: "High",
-    status: "Pending",
-  },
-  {
-    id: 2,
-    title: "Street light issue",
-    category: "Electricity",
-    priority: "Medium",
-    status: "In Progress",
-  },
-  {
-    id: 3,
-    title: "Road potholes",
-    category: "Infrastructure",
-    priority: "Low",
-    status: "Resolved",
-  },
-];
+import api from "../services/api";
 
 function ManageComplaints() {
+  const [complaints, setComplaints] = useState([]);
+
+  useEffect(() => {
+    api.get("/complaints").then((res) => {
+      setComplaints(res.data);
+    });
+  }, []);
+
+  const handleStatusChange = async (id, status) => {
+    await api.put(`/complaints/${id}`, { status });
+
+    setComplaints((prev) =>
+      prev.map((c) =>
+        c._id === id ? { ...c, status } : c
+      )
+    );
+  };
+
   return (
     <AdminLayout>
       <h1 className="text-2xl font-bold mb-6">
@@ -45,14 +40,17 @@ function ManageComplaints() {
 
           <tbody>
             {complaints.map((c) => (
-              <tr key={c.id} className="border-t">
+              <tr key={c._id} className="border-t">
                 <td className="p-4">{c.title}</td>
                 <td className="p-4">{c.category}</td>
                 <td className="p-4">{c.priority}</td>
                 <td className="p-4">
                   <select
                     className="border rounded px-2 py-1"
-                    defaultValue={c.status}
+                    value={c.status}
+                    onChange={(e) =>
+                      handleStatusChange(c._id, e.target.value)
+                    }
                   >
                     <option>Pending</option>
                     <option>In Progress</option>
@@ -65,7 +63,7 @@ function ManageComplaints() {
         </table>
       </div>
     </AdminLayout>
-  )
+  );
 }
 
-export default ManageComplaints
+export default ManageComplaints;

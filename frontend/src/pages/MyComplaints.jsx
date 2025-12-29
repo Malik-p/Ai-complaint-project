@@ -16,16 +16,22 @@ function MyComplaints() {
     <UserLayout>
       <h1 className="text-2xl font-bold mb-6">My Complaints</h1>
 
-      <div className="space-y-4">
-        {complaints.map((c) => (
-          <ComplaintCard
-            key={c._id}
-            title={c.title}
-            category={c.category}
-            status={c.status}
-          />
-        ))}
-      </div>
+      {complaints.length === 0 ? (
+        <div className="bg-white p-6 rounded-xl shadow text-center text-gray-500">
+          You haven’t raised any complaints yet.
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {complaints.map((c) => (
+            <ComplaintCard
+              key={c._id}
+              title={c.title}
+              category={c.category}
+              status={c.status}
+            />
+          ))}
+        </div>
+      )}
     </UserLayout>
   );
 }

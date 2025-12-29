@@ -6,6 +6,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import connectDB from "./config/db.js";
 import complaintRoutes from "./routes/complaintRoutes.js";
+import aiRoutes from "./routes/aiRoutes.js";
 
 const app = express();
 
@@ -16,5 +17,6 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
+app.use("/api/ai", aiRoutes);
 
 export default app;

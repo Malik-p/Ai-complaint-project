@@ -27,41 +27,48 @@ function ManageComplaints() {
         Manage Complaints
       </h1>
 
-      <div className="bg-white rounded-xl shadow overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="text-left p-4">Title</th>
-              <th className="text-left p-4">Category</th>
-              <th className="text-left p-4">Priority</th>
-              <th className="text-left p-4">Status</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {complaints.map((c) => (
-              <tr key={c._id} className="border-t">
-                <td className="p-4">{c.title}</td>
-                <td className="p-4">{c.category}</td>
-                <td className="p-4">{c.priority}</td>
-                <td className="p-4">
-                  <select
-                    className="border rounded px-2 py-1"
-                    value={c.status}
-                    onChange={(e) =>
-                      handleStatusChange(c._id, e.target.value)
-                    }
-                  >
-                    <option>Pending</option>
-                    <option>In Progress</option>
-                    <option>Resolved</option>
-                  </select>
-                </td>
+      {/* EMPTY STATE */}
+      {complaints.length === 0 ? (
+        <div className="bg-white p-6 rounded-xl shadow text-center text-gray-500">
+          No complaints found.
+        </div>
+      ) : (
+        <div className="bg-white rounded-xl shadow overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="text-left p-4">Title</th>
+                <th className="text-left p-4">Category</th>
+                <th className="text-left p-4">Priority</th>
+                <th className="text-left p-4">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+
+            <tbody>
+              {complaints.map((c) => (
+                <tr key={c._id} className="border-t">
+                  <td className="p-4">{c.title}</td>
+                  <td className="p-4">{c.category}</td>
+                  <td className="p-4">{c.priority}</td>
+                  <td className="p-4">
+                    <select
+                      className="border rounded px-2 py-1"
+                      value={c.status}
+                      onChange={(e) =>
+                        handleStatusChange(c._id, e.target.value)
+                      }
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="resolved">Resolved</option>
+                    </select>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </AdminLayout>
   );
 }

@@ -1,26 +1,58 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import UserLayout from "../layouts/UserLayout";
 import api from "../services/api";
 
 function CreateComplaint() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loadingAI, setLoadingAI] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!title.trim() || !description.trim()) {
+      alert("Title and description are required");
+      return;
+    }
+
     try {
+      setSubmitting(true);
+
       await api.post("/complaints", {
         title,
         description,
       });
 
       alert("Complaint submitted successfully");
-      setTitle("");
-      setDescription("");
+      navigate("/my-complaints"); // ✅ better UX
     } catch (err) {
       console.error(err);
       alert("Failed to submit complaint");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const enhanceWithAI = async () => {
+    if (!description.trim()) {
+      alert("Write a description first");
+      return;
+    }
+
+    try {
+      setLoadingAI(true);
+      const res = await api.post("/ai/enhance-description", {
+        description,
+      });
+      setDescription(res.data.enhancedDescription);
+    } catch {
+      alert("AI enhancement failed");
+    } finally {
+      setLoadingAI(false);
     }
   };
 
@@ -42,7 +74,6 @@ function CreateComplaint() {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Brief issue title"
             className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            required
           />
         </div>
 
@@ -56,21 +87,30 @@ function CreateComplaint() {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Explain the issue in detail"
             className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            required
           />
         </div>
 
-        {/* AI Preview (dummy for now) */}
+        {/* AI Preview */}
         <div className="bg-indigo-50 p-4 rounded-lg text-sm">
           <p><strong>AI Category:</strong> Auto-detect</p>
           <p><strong>Priority:</strong> Auto-detect</p>
         </div>
 
         <button
-          type="submit"
-          className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
+          type="button"
+          onClick={enhanceWithAI}
+          disabled={loadingAI}
+          className="w-full border border-indigo-600 text-indigo-600 py-2 rounded-lg hover:bg-indigo-50 disabled:opacity-60"
         >
-          Submit Complaint
+          {loadingAI ? "Enhancing..." : "Enhance with AI"}
+        </button>
+
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-60"
+        >
+          {submitting ? "Submitting..." : "Submit Complaint"}
         </button>
       </form>
     </UserLayout>

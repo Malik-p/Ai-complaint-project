@@ -1,17 +1,30 @@
-import React from 'react'
+import { useEffect, useState } from "react";
 import UserLayout from "../layouts/UserLayout";
+import api from "../services/api";
 
 function UserDashboard() {
+  const [complaints, setComplaints] = useState([]);
+
+  useEffect(() => {
+    api.get("/complaints/me").then((res) => {
+      setComplaints(res.data);
+    });
+  }, []);
+
+  const total = complaints.length;
+  const pending = complaints.filter(c => c.status === "pending").length;
+  const resolved = complaints.filter(c => c.status === "resolved").length;
+
   return (
     <UserLayout>
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
-      {/* Stats */}
+      {/* STATS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {[
-          { label: "Total Complaints", value: 12 },
-          { label: "Pending", value: 4 },
-          { label: "Resolved", value: 8 },
+          { label: "Total Complaints", value: total },
+          { label: "Pending", value: pending },
+          { label: "Resolved", value: resolved },
         ].map((item) => (
           <div
             key={item.label}
@@ -23,30 +36,34 @@ function UserDashboard() {
         ))}
       </div>
 
-      {/* Recent complaints */}
+      {/* RECENT COMPLAINTS */}
       <div className="bg-white rounded-xl shadow p-6">
         <h2 className="text-lg font-semibold mb-4">
           Recent Complaints
         </h2>
 
-        <ul className="space-y-4">
-          {["Water leakage", "Power cut", "Road damage"].map(
-            (title, i) => (
+        {complaints.length === 0 ? (
+          <p className="text-gray-500 text-center">
+            No complaints raised yet.
+          </p>
+        ) : (
+          <ul className="space-y-4">
+            {complaints.slice(0, 5).map((c) => (
               <li
-                key={i}
+                key={c._id}
                 className="flex justify-between border-b pb-2"
               >
-                <span>{title}</span>
-                <span className="text-sm text-indigo-600">
-                  Pending
+                <span>{c.title}</span>
+                <span className="text-sm capitalize text-indigo-600">
+                  {c.status.replace("_", " ")}
                 </span>
               </li>
-            )
-          )}
-        </ul>
+            ))}
+          </ul>
+        )}
       </div>
     </UserLayout>
-  )
+  );
 }
 
-export default UserDashboard
+export default UserDashboard;

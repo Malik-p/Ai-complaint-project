@@ -3,12 +3,14 @@ import Complaint from "../models/Complaint.js";
 /* ================= CREATE COMPLAINT (USER) ================= */
 export const createComplaint = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, name, address } = req.body;
 
-    if (!title || !description) {
+    if (!title || !description || !name || !address) {
       return res
         .status(400)
-        .json({ message: "Title and description are required" });
+        .json({
+          message: "Title, description, name, and address are required",
+        });
     }
 
     console.log("🔥 CREATE COMPLAINT CONTROLLER HIT");
@@ -16,6 +18,8 @@ export const createComplaint = async (req, res) => {
     const complaint = await Complaint.create({
       title,
       description,
+      name,
+      address,
       user: req.user.userId, // ✅ FINAL FIX
       category: "Uncategorized",
       priority: "Medium",

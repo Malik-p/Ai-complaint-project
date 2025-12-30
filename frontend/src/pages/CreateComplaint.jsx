@@ -6,6 +6,8 @@ import api from "../services/api";
 function CreateComplaint() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
   const [loadingAI, setLoadingAI] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
@@ -25,6 +27,8 @@ function CreateComplaint() {
       await api.post("/complaints", {
         title,
         description,
+        name,
+        address,
       });
 
       alert("Complaint submitted successfully");
@@ -64,6 +68,30 @@ function CreateComplaint() {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-xl shadow max-w-xl space-y-5"
       >
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Full Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2"
+            placeholder="Your full name"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Address</label>
+          <textarea
+            rows="2"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="w-full border rounded-lg px-4 py-2"
+            placeholder="House no, street, area, city"
+          />
+        </div>
+
+
         <div>
           <label className="block text-sm font-medium mb-1">
             Title

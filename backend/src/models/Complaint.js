@@ -10,6 +10,9 @@ const complaintSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    name: { type: String, required: true },
+    address: { type: String, required: true },
+
     category: { type: String },
     priority: { type: String },
     status: {

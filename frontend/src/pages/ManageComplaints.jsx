@@ -37,6 +37,9 @@ function ManageComplaints() {
           <table className="w-full text-sm">
             <thead className="bg-gray-100">
               <tr>
+                <th className="text-left
+                 p-4">Name</th>
+                <th className="text-left p-4">Address</th>
                 <th className="text-left p-4">Title</th>
                 <th className="text-left p-4">Category</th>
                 <th className="text-left p-4">Priority</th>
@@ -47,6 +50,8 @@ function ManageComplaints() {
             <tbody>
               {complaints.map((c) => (
                 <tr key={c._id} className="border-t">
+                  <td className="p-4">{c.name}</td>
+                  <td className="max-w-xs truncate">{c.address}</td>
                   <td className="p-4">{c.title}</td>
                   <td className="p-4">{c.category}</td>
                   <td className="p-4">{c.priority}</td>
